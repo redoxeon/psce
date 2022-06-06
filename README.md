@@ -8,6 +8,8 @@
 
 I've included a few files to test against that you can provide the paths to, or your own files that match my assumed file layout (see below).
 
+I've also included a couple unit tests that can be run with `cargo test`
+
 ## Assumptions I Made
 
 ### Address Layout (one per line)
