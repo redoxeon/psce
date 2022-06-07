@@ -1,0 +1,20 @@
+12234 fake street, real city, ST, 23452
+98 address rd, fake city, FS, 83392
+478 testing ln, smalltown, NE, 84729
+3752 Zimmerman Lane, Los Angeles, CA, 90013
+1796 Emma Street, Roger Mills, TX, 73628
+4930 Victoria Court, Bangor, ME, 04401
+3502 Chapel Street, Houston, TX, 77032
+82 Buckingham St., Port Jefferson Station, NY, 11776
+306 Sunset St., Thomasville, NC, 27360
+7129 Manor Station Avenue, Atwater, CA ,95301
+9905 Vermont Drive, Salt Lake City, UT ,84119
+52 Manchester St., Xenia, OH, 45385
+121 Elizabeth St., Iowa City, IA, 52240
+7430 Surrey St., Utica, NY, 13501
+7685 West Williams Dr., Amityville, NY, 11701
+11 Country Club Dr., North Brunswick, NJ, 08902
+55 George Dr., Jackson Heights, NY, 11372
+7 Edgemont Ave., Taylors, SC, 29687
+217 West Monroe Drive, Littleton, CO, 80123
+837 Dogwood Ave., Los Angeles, CA, 90008
