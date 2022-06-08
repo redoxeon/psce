@@ -44,8 +44,6 @@ fn hungarian_algorithm_helper(
         )));
     });
 
-    dbg!(&matrix);
-
     let (_total, distribution) = kuhn_munkres(&matrix);
 
     let mut main_list: Vec<OutputLine> = Vec::new();
