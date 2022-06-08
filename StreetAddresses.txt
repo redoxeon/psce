@@ -1,0 +1,7 @@
+123 Elm Street, Scary Town, IN, 55555
+1345 Sesame Street, Sesame Town, IN, 55555
+3532 Pacific Beach Drive, Pacific Beach, CA, 55555
+11 Atlantic Avenue, Atlantic City, NJ, 55555
+123123 Beach Boulevard, The Beach, CA, 12312
+5235 Hotel Circle, San Diego, CA, 12314
+623 Evergreen Terrace, Portland, OR, 15125

@@ -38,13 +38,13 @@ fn hungarian_algorithm_helper(
 ) -> Result<Vec<OutputLine>, std::io::Error> {
     let mut matrix = Matrix::new(driver_names.lines().count(), dest_addrs.lines().count(), -1);
     matrix.indices().for_each(|i| {
-        let mut _cell = matrix.get_mut(i).unwrap();
-        _cell = &mut secret_algorithm(
+        matrix.set_slice(i, &Matrix::new(1, 1, secret_algorithm(
             driver_names.lines().nth(i.0).unwrap(),
             dest_addrs.lines().nth(i.1).unwrap(),
-        )
-        .unwrap();
+        )));
     });
+
+    dbg!(&matrix);
 
     let (_total, distribution) = kuhn_munkres(&matrix);
 
@@ -53,7 +53,7 @@ fn hungarian_algorithm_helper(
         let current_line: OutputLine = OutputLine {
             driver: driver.to_owned(),
             shipment_destination: dest_addrs.lines().nth(distribution[i]).unwrap().to_owned(),
-            ss: matrix.idx((i, distribution[i])) as i32,
+            ss: matrix.get((i, distribution[i])).unwrap().clone(),
         };
 
         main_list.push(current_line);
@@ -62,27 +62,14 @@ fn hungarian_algorithm_helper(
     Ok(main_list)
 }
 
-fn secret_algorithm(driver: &str, addr: &str) -> Option<i32> {
-    let mut ss = 0.0;
-
-    // take off everything after the street name, at the first comma
-    let mut street_name = addr.to_owned();
-    street_name.truncate(street_name.find(',')?);
-
-    // take off the street number, before the first space
-    let num_offset = street_name.find(' ')?;
-    street_name.drain(..num_offset);
+fn secret_algorithm(driver: &str, addr: &str) -> i32 {
+    let mut ss: f64;
+    let street_name = trim_to_street_name(addr);
 
     if street_name.len() % 2 == 0 {
-        let re = Regex::new(r"[aeiou]").ok()?;
-        for _mat in re.find_iter(driver) {
-            ss += 1.5;
-        }
+        ss = find_vowels(driver) as f64 * 1.5;
     } else {
-        let re = Regex::new(r"[bcdfghjklmnpqrstvwxyz]").ok()?;
-        for _mat in re.find_iter(driver) {
-            ss += 1.0;
-        }
+        ss = find_consonants(driver) as f64;
     }
 
     // additional common factors related to length can be added here
@@ -90,9 +77,60 @@ fn secret_algorithm(driver: &str, addr: &str) -> Option<i32> {
         ss *= 1.5;
     }
 
-    if ss <= 0.0 {
-        () // if no suitability score could be fount, return None
-    }
+    ss as i32
+}
 
-    Some(ss as i32)
+fn trim_to_street_name(addr: &str) -> String {
+    // take off everything after the street name, at the first comma
+    let mut street_name = addr.to_owned();
+    street_name.truncate(street_name.find(',').unwrap());
+
+    // take off the street number, before the first space
+    let num_offset = street_name.find(' ').unwrap();
+    street_name.drain(..(num_offset + 1));
+
+    street_name
+}
+
+fn find_consonants(my_string: &str) -> i32 {
+    let mut cons_count = 0;
+    let re = Regex::new(r"(?i)[bcdfghjklmnpqrstvwxyz]").ok().unwrap();
+    for _mat in re.find_iter(my_string) {
+        cons_count += 1;
+    }
+    cons_count
+}
+
+fn find_vowels(my_string: &str) -> i32 {
+    let mut vowel_count = 0;
+    let re = Regex::new(r"(?i)[aeiou]").ok().unwrap();
+    for _mat in re.find_iter(my_string) {
+        vowel_count += 1;
+    }
+    vowel_count
+}
+
+#[test]
+fn test_trim() {
+    let addr = "123 Elm Street, Scary Town, IN, 55555";
+    assert_eq!(String::from("Elm Street"), trim_to_street_name(addr));
+}
+
+#[test]
+fn test_consonants() {
+    let addr = "Elm Street";
+    assert_eq!(6, find_consonants(addr));
+}
+
+#[test]
+fn test_vowels() {
+    let addr = "Elm Street";
+    assert_eq!(3, find_vowels(addr));
+}
+
+#[test]
+fn test_secret_alg() {
+    let addr = "123 Elm Street, Scary Town, IN, 55555";
+    let name = "Jane Doe";
+    assert_eq!(6, secret_algorithm(name, addr));
 }
